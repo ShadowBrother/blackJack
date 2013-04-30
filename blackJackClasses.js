@@ -1,10 +1,13 @@
 //blackJack.js
+//Jesse Hoyt - jesselhoyt@gmail.com
 //card, hand, deck classes for a blackjack game
 
-rankArray = ["", "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"] ;
+rankArray = ["", "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"] ;//0th left empty for convenience
 suitArray = ["Spades", "Hearts", "Clubs", "Diamonds"] ;
 
 //Card class
+
+//Card class constructor
 //theSuit: (int) suit of card
 //theRank: (int) rank of card
 //up: (bool) faceup?
@@ -13,11 +16,13 @@ function Card(theSuit, theRank, up){
 	if(theSuit < 0 || theSuit > 3 || theRank < 1 || theRank > 13) throw "Invalid suit and/or rank" ;
 	this.suit = theSuit ;
 	this.rank = theRank ;
-	this.faceUp = up || true ;
-
+	
+	this.faceUp = (typeof up !== 'undefined')? up : true ;//defaults to faceup if not provided
+	
 
 }
 
+//returns string describing card rank and suit
 Card.prototype.toString = function(){
 
 	return rankArray[this.rank] + " of " + suitArray[this.suit] ;
@@ -25,7 +30,6 @@ Card.prototype.toString = function(){
 }
 
 //returns value of card
-
 Card.prototype.value = function(){
 
 	if(this.faceUp){//only score faceup cards
@@ -83,9 +87,10 @@ function Deck(){
 //shuffle deck
 Deck.prototype.shuffle = function(){
 
-	for(i = 0 ; i < 52 ; i++){
+	//updated to allow increasing deck size and shuffle a partial deck
+	for(i = this.currentCard, len = this.deck.length ; i < len ; i++){
 	
-		var j = Math.floor(Math.random() * 52 ) ;
+		var j = Math.floor(Math.random() * len ) ;
 		var tmpCard = this.deck[i] ;
 		this.deck[i] = this.deck[j] ;
 		this.deck[j] = tmpCard ;
@@ -97,15 +102,31 @@ Deck.prototype.shuffle = function(){
 //deals top card
 Deck.prototype.dealCard = function(){
 
-return this.deck[this.currentCard++] ;
-
+	if(this.moreCards()){
+		return this.deck[this.currentCard++] ;
+	}
+	else {
+		throw "deck is empty"
+	}
 }
 
 //returns true if more cards in deck
 Deck.prototype.moreCards = function(){
 
-	return (this.currentCard == 52)?false:true ;
+	return this.currentCard < this.deck.length ;
 	
+}
+
+//add in new deck
+Deck.prototype.addDeck = function(){
+
+	for(i = 1 ; i < 14 ; i++){
+		for(j = 0 ; j < 4 ; j++){
+		
+			this.deck.push(new Card(j, i)) ;
+		}
+	}
+
 }
 
 //for testing Deck
@@ -122,9 +143,16 @@ alert(aCard.toString()) ;
 function Hand(handsize, aDeck){
 
 	this.hand = [] ;
-	if(handsize){
-		if(aDeck){
-			for(i = 0 ; i < handsize ; i++) this.hand.push(aDeck.dealCard()) ;
+	if(handsize){//if supplied a handsize, deal out hand
+		if(aDeck){//check that a deck has been supplied
+			for(i = 0 ; i < handsize ; i++){ 
+				try { 
+					this.hand.push(aDeck.dealCard()) ;
+				}
+				catch(e){
+					throw e ;
+				}
+			}
 		}
 		else {
 			throw "no deck supplied" ;
@@ -141,6 +169,7 @@ Hand.prototype.addCard = function(newCard){
 
 }
 
+//returns string representation of hand
 Hand.prototype.toString = function(){
 
 	var handsize = this.hand.length ;

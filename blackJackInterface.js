@@ -1,13 +1,23 @@
 //interface for blackJackClasses
+//Jesse Hoyt - jesselhoyt@gmail.com
+
+//requires blackJackClasses.js
+//requires Jquery
+
 
 cardStyle = ["checkered/", "oxygen/", "oxygen_white/"] ;//array of card styles
-cardStyle.index = 0 ; //default card style is checkered
-cardStyle.next = function(){//function to increment index to point to next card style
+Array.prototype.index = 0 ; //default card style is checkered
+Array.prototype.next = function(){//function to increment index to point to next card style
 
-	this.index = (this.index + 1) % cardStyle.length ;
+	this.index = (this.index + 1) % this.length ;
+};
+Array.prototype.previous = function(){//function to decrement index to point to previous card style
+
+	if(this.index === 0) this.index = this.length ;
+	else this.index -= 1 ;
 };
 
-function updateCardStyle(){
+function updateCardStyle(){//updates cardstyle of all cards
 
 	$('#deck').attr('src', 'cards/' + cardStyle[cardStyle.index] + 'back.png') ;
 	$('.card').each(function(){
@@ -18,14 +28,20 @@ function updateCardStyle(){
 	});
 
 }
+
 //deals a card from deck to specified hand
 //id : (string) html element id for hand. Either playerHand or computerHand
 //hand : (Hand object) playerHand or computerHand, should be same as id
-//deck : deck to deal from
+//deck : (Deck object) deck to deal from
 function dealCard(id, hand, deck){
 
 	//deal new card and add to hand
-	var newCard = deck.dealCard() ;
+	try{
+		var newCard = deck.dealCard() ;
+	}
+	catch(e){
+		alert(e);
+	}
 	hand.addCard(newCard) ;
 	//create new image element for card and append to hand
 	var newCardElement = $('<img class="card" src="cards/' + cardStyle[cardStyle.index] + newCard.suit + newCard.rank +'.png"></img>') ;
@@ -37,6 +53,7 @@ function dealCard(id, hand, deck){
 //updates player and computer scores
 function updateScore(){
 
+	//alert("updateScore") ;
 	$('#playerScore').html(playerHand.value()) ;
 	$('#computerScore').html(computerHand.value()) ;
 
@@ -68,7 +85,9 @@ function calculateWinner(){
 function hit(){
 
 	//alert('hit') ;
+	
 	dealCard('playerHand', playerHand, deck) ;
+		
 	if(playerHand.value() > 21){
 
 		alert('You bust!') ;
@@ -99,9 +118,10 @@ function stay(){
 	
 }
 
+//recursive function to perform computer's hits
 function computerHit(){
 
-	if(computerHand.value() < 17){
+	if(computerHand.value() < 17){//computer must hit if score is less than 17
 	
 	dealCard('computerHand', computerHand, deck) ;
 	updateScore() ;
@@ -112,13 +132,17 @@ function computerHit(){
 }
 
 //flips over card
+//card : (Card object) card to flip
 function flipCard(card){
 
-	
+	//alert("flipping card") ;
 	card.flip() ;
+	
+	//update image for card
+	
 	if(card.faceUp) $(card.element).attr('src', 'cards/' + cardStyle[cardStyle.index] + card.suit + card.rank +'.png') ;
 	else $(card.element).attr('src', 'cards/' + cardStyle[cardStyle.index] + 'back.png') ;
-
+	
 }
 
 deckLayer = 0 ;//keeps track of the layer of cards on the deck
