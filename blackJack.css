@@ -1,0 +1,110 @@
+body {
+	background : green ;
+}
+
+.card {
+	
+	margin : 10px ;
+	
+	
+	float : left ;
+	height : 150px ;
+	width : 80px ;
+	
+}
+
+.hands{
+
+	width : 60% ;
+	height : 500px ;
+	position : relative ;
+	
+	float :left ;
+}
+.hand{
+
+	height : 200px ;
+	
+}
+
+.score{
+
+	background : white ;
+	width : 100px ;
+	border : 2px solid black
+	
+
+}
+
+#computerScore{
+
+	position : absolute ;
+	top : 0 ;
+
+}
+
+#computerHand{
+
+	position : absolute ;
+	top : 30px ;
+	
+	
+}
+
+#playerScore{
+
+	position : absolute ;
+	top : 230px ;
+
+}
+#playerHand{
+
+	position : absolute ;
+	top : 270px ;
+	
+	
+	
+}
+
+
+#buttons {
+
+	float : left ;
+	width : 30% ;
+	
+
+}
+
+button {
+
+	height : 40px ;
+	width : 70px ;
+	float : left ;
+}
+
+#newGame {
+	position : relative ;
+	left : 35px ;
+	margin-bottom : 10px ;
+}
+
+#hit {
+
+	clear :left ;
+}
+
+#deck {
+
+	
+	position : relative ;
+	bottom: -150px ;
+	right: 10px ;
+
+}
+.deck {
+
+	border : 0px solid black ;
+	position: absolute ;
+	left: -10px ;
+
+}

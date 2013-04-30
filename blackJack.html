@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!-- BlackJack game
+Jesse Hoyt - jesselhoyt@gmail.com
+card clip art from  http://www.cksinfo.com/entertainment/games/carddeck/index.html
+					http://openclipart.org/image/800px/svg_to_png/23038/nicubunu_Card_backs_grid_red.png -->
+<html>
+<head>
+	<title>Black Jack</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="blackJack.css"/>
+	<script src="jquery-1.9.1.min.js"></script>
+	<script src="blackJackClasses.js"></script>
+	<script src="blackJackInterface.js"></script>
+	<script src="blackJack.js"></script>
+	
+</head>
+<body>
+	<h1>Black Jack</h1>
+	
+	<div class="hands">
+		<div class="score" id="computerScore">0</div>
+		<div class="hand" id="computerHand"></div>
+		<div class="score" id="playerScore">0</div>
+		<div class="hand" id="playerHand"></div>
+	</div>
+	<div id="buttons">
+		<button id="newGame">New Game</button>
+		<button id="hit">Hit</button>
+		<button id="stay">Stay</button>
+		<div id="deck"></div>
+	</div>
+</body>
+</html>
