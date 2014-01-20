@@ -70,15 +70,17 @@ catch(e){
 */
 
 //Deck class
-function Deck(){
+//init : (boolean) whether deck should be initialized with 52 cards
+function Deck(init){
 
 	this.deck = [] ;
 	this.currentCard = 0 ;
-	
-	for(i = 1 ; i < 14 ; i++){
-		for(j = 0 ; j < 4 ; j++){
+	if(init){
+		for(i = 1 ; i < 14 ; i++){
+			for(j = 0 ; j < 4 ; j++){
 		
-			this.deck.push(new Card(j, i)) ;
+				this.deck.push(new Card(j, i)) ;
+			}
 		}
 	}
 
@@ -90,7 +92,7 @@ Deck.prototype.shuffle = function(){
 	//updated to allow increasing deck size and shuffle a partial deck
 	for(i = this.currentCard, len = this.deck.length ; i < len ; i++){
 	
-		var j = Math.floor(Math.random() * len ) ;
+		while((j = Math.floor(Math.random() * len )) < this.currentCard){}
 		var tmpCard = this.deck[i] ;
 		this.deck[i] = this.deck[j] ;
 		this.deck[j] = tmpCard ;
@@ -106,7 +108,10 @@ Deck.prototype.dealCard = function(){
 		return this.deck[this.currentCard++] ;
 	}
 	else {
-		throw "deck is empty"
+		throw {
+		name: "EmptyDeck",
+		message: "The deck is empty."
+		};		
 	}
 }
 
@@ -155,7 +160,10 @@ function Hand(handsize, aDeck){
 			}
 		}
 		else {
-			throw "no deck supplied" ;
+			throw {
+			name: "NoDeck",
+			message: "no deck supplied."
+			};
 		}
 	
 	}

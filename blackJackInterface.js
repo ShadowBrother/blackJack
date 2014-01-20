@@ -35,19 +35,32 @@ function updateCardStyle(){//updates cardstyle of all cards
 //deck : (Deck object) deck to deal from
 function dealCard(id, hand, deck){
 
+	
 	//deal new card and add to hand
 	try{
 		var newCard = deck.dealCard() ;
 	}
 	catch(e){
-		alert(e);
+		if(e.name == "EmptyDeck"){//deck is empty
+			alert(e.message + " Adding new deck.");
+			addDeck(deck) ;
+			var newCard = deck.dealCard() ;
+		}
+		else{
+			alert(e.name + ": " + e.message)
+		}
 	}
+	
 	hand.addCard(newCard) ;
 	//create new image element for card and append to hand
 	var newCardElement = $('<img class="card" src="cards/' + cardStyle[cardStyle.index] + newCard.suit + newCard.rank +'.png"></img>') ;
 	$('#' + id).append(newCardElement) ;
 	newCard.element = newCardElement ;//give card an element property to keep track of image
 	updateScore() ;
+	
+	//remove card from deck
+	$('#deck .card:last').remove() ;
+	--deckLayer ;
 }
 
 //updates player and computer scores
@@ -70,15 +83,65 @@ function calculateWinner(){
 	if(plScore > 21 || (plScore <= cpScore && cpScore <= 21)){//player lost
 	
 		alert('You lose.') ;
+		addLoss() ;
 	}
 	else {//player won
 	
 		alert('You win!') ;
+		addWin() ;
 	
 	}
+}
+
+//add a win to record
+function addWin(){
+	$('#wins').html(++wins) ;
+}
+
+//add a loss to record
+function addLoss(){
+	$('#losses').html(++losses) ;
+}
+
+//New Hand
+function newHand(){
+
+	//alert("New Hand") ;
+	$('.hand .card').remove();//remove cards from last hand
 	
-
-
+	playerHand = new Hand() ;
+	computerHand = new Hand() ;
+	dealCard('playerHand', playerHand, deck) ;
+	dealCard('playerHand', playerHand, deck) ;
+	dealCard('computerHand', computerHand, deck) ;
+	flipCard(computerHand.hand[0]) ;//first card to dealer face down
+	dealCard('computerHand', computerHand, deck) ;
+	updateScore() ;
+	if(playerHand.value() === 21){
+		alert('Black Jack! You Win!') ;
+		addWin() ;
+		$('#buttons').off('click', '#hit') ;
+		$('#buttons').off('click', '#stay') ;//games over
+	}
+	else {
+		computerHand.hand[0].flip();//flip card invisibly to check for black Jack
+		if(computerHand.value() === 21){
+			computerHand.hand[0].flip() ;//flip card back so flipCard functions properly
+			flipCard(computerHand.hand[0]) ;//visibly flip card so player can see black jack
+			updateScore() ;
+			alert('Computer has Black Jack. You lose.') ;
+			addLoss() ;
+			$('#buttons').off('click', '#hit') ;
+			$('#buttons').off('click', '#stay') ;//games over
+		}
+		else{//neither has black Jack, game resumes
+			computerHand.hand[0].flip();//fix flipped computer card
+			$('#buttons').off('click', '#hit') ;//remove click handlers if they are still there
+			$('#buttons').off('click', '#stay') ;//to prevent multiple bindings
+			$('#buttons').on('click','#hit', hit) ;
+			$('#buttons').on('click', '#stay', stay) ;
+		}
+	}
 }
 
 //when player clicks hit
@@ -91,6 +154,7 @@ function hit(){
 	if(playerHand.value() > 21){
 
 		alert('You bust!') ;
+		addLoss() ;
 		$('#buttons').off('click', '#hit') ;
 		$('#buttons').off('click', '#stay') ;//games over
 	}	
@@ -147,13 +211,18 @@ function flipCard(card){
 
 deckLayer = 0 ;//keeps track of the layer of cards on the deck
 //adds deck
-function addDeck(){
+//deck : (Deck object) deck to add cards to
+function addDeck(deck){
 
+	deck.addDeck() ;
+	deck.shuffle() ;
 	for(i = 0 ; i < 52 ; i++){
 			$('#deck')
 			.append($('<img class="card deck" src="cards/' + cardStyle[cardStyle.index] + 'back.png"></img>')
 			.css({"left" : -deckLayer/2, "top": deckLayer/10})) ;
 			++deckLayer ;
+			
 		}
+		
 
 }

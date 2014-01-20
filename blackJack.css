@@ -87,7 +87,13 @@ button {
 	left : 35px ;
 	margin-bottom : 10px ;
 }
-
+#newHand{
+	clear : left;
+	position : relative ;
+	left : 35px ;
+	margin-bottom : 10px ;
+	}
+	
 #hit {
 
 	clear :left ;
@@ -108,3 +114,27 @@ button {
 	left: -10px ;
 
 }
+#winsVLosses{
+    clear : both;
+	float : left;
+	position : relative ;
+	bottom: -200px ;
+	
+}
+
+label {
+    clear:left;
+    float: left;
+    width: 3em;
+    margin-right : 1em;
+}
+
+#wins {
+float:left;
+
+}
+
+#losses{
+float:left;
+}
+
